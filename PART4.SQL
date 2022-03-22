@@ -127,7 +127,50 @@ GROUP BY EXTRACT (YEAR FROM ZATRUDNIONY)
 ORDER BY ROK;
 
 /*
-    ZAD 12
+    ZAD 13
  */
 
- 
+SELECT
+    LENGTH(NAZWISKO) AS ILE_LITER,
+    COUNT(NAZWISKO) AS W_ILU_NAZWISKACH
+FROM PRACOWNICY
+GROUP BY LENGTH(NAZWISKO)
+ORDER BY ILE_LITER;
+
+/*
+    ZAD 14
+ */
+
+SELECT
+    COUNT(NAZWISKO) AS ILE_NAZWISK_Z_A
+FROM PRACOWNICY WHERE INSTR(NAZWISKO, 'A', 1, 1) > 0;
+
+/*
+    ZAD 15
+ */
+
+SELECT
+    COUNT(CASE
+        WHEN INSTR(NAZWISKO, 'A', 1, 1) > 0 THEN 1
+    END) AS ILE_Z_A,
+    COUNT(CASE
+        WHEN INSTR(NAZWISKO, 'E', 1, 1) > 0 THEN 1
+    END) AS ILE_Z_E
+FROM PRACOWNICY;
+
+/*
+    ZAD 16
+    Dla każdego zespołu wyświetl jego identyfikator, sumę płac pracowników w nim zatrudnionych oraz listę pracowników
+    w formie: nazwisko:podstawowa płaca pracownika. Dane pracowników na liście mają zostać oddzielone średnikami.
+    Wynik posortuj wg identyfikatorów zespołów.
+
+ */
+
+SELECT
+    ID_ZESP,
+    SUM(PLACA_POD) AS SUMA_PLAC,
+    LISTAGG(NAZWISKO || ':' || PLACA_POD,';') WITHIN GROUP ( ORDER BY NAZWISKO ) AS PRACOWNICY
+FROM PRACOWNICY
+GROUP BY ID_ZESP
+ORDER BY ID_ZESP;
+
